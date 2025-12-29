@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>九(9)班 · 2026 贺新春</title>
+    <style>
+        :root {
+            /* 重新定义的红色系色彩系统 */
+            --main-red: #d32f2f;
+            --bright-red: #ff3b30;
+            --deep-red: #5c0000;
+            --gold-accent: #ffcc00;
+            --glass-white: rgba(255, 255, 255, 0.12);
+            --glass-border: rgba(255, 255, 255, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            /* 深邃的红色渐变背景 */
+            background: radial-gradient(circle at center, #8e0000 0%, #3a0000 100%);
+            color: #fff;
+            font-family: -apple-system, "SF Pro Display", "PingFang SC", sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 增加动态红光氛围 */
+        .ambient-glow {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at 50% 50%, rgba(255, 59, 48, 0.2) 0%, transparent 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 20px 40px;
+            opacity: 0;
+            animation: headerFadeIn 1s ease-out forwards;
+        }
+
+        @keyframes headerFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: clamp(2.2rem, 8vw, 3.8rem);
+            font-weight: 800;
+            /* 金色渐变文字 */
+            background: linear-gradient(180deg, #fff 40%, var(--gold-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+            text-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.7);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 18px;
+            width: 90%;
+            max-width: 1100px;
+            padding-bottom: 100px;
+        }
+
+        .name-card {
+            /* 红色玻璃拟态卡片 */
+            background: rgba(255, 59, 48, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            height: 85px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            
+            /* 淡入效果优化 */
+            opacity: 0;
+            transform: translateY(20px);
+            will-change: transform, opacity;
+            animation: cardEntrance 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        @keyframes cardEntrance {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .name-card:hover {
+            background: rgba(255, 59, 48, 0.3);
+            transform: scale(1.08) translateY(-8px);
+            border-color: rgba(255, 204, 0, 0.5); /* 悬浮时金色边框 */
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+        }
+
+        /* 庆祝页面全屏红色滤镜 */
+        #overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(43, 0, 0, 0.9);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .content-box {
+            text-align: center;
+            padding: 0 40px;
+            transform: scale(0.85);
+            transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        #overlay.active .content-box {
+            transform: scale(1);
+        }
+
+        .big-name {
+            font-size: 5.5rem;
+            font-weight: 900;
+            margin-bottom: 25px;
+            background: linear-gradient(to bottom, #fff, var(--gold-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+        }
+
+        .wish {
+            font-size: 1.6rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 600px;
+            line-height: 1.8;
+            margin-bottom: 50px;
+            font-weight: 300;
+        }
+
+        .btn-close {
+            background: var(--gold-accent);
+            color: #5c0000;
+            padding: 16px 50px;
+            border-radius: 40px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn-close:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+        }
+
+        /* 优化金红色粒子效果 */
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            border-radius: 2px;
+            animation: explode 1.2s ease-out forwards;
+        }
+
+        @keyframes explode {
+            0% { transform: translate(0,0) rotate(0deg) scale(1); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) rotate(360deg) scale(0); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="ambient-glow"></div>
+
+<header>
+    <h1>2026 瑞雪丰年</h1>
+    <div class="subtitle">荷塘中学 · 九(9)班 · 新春盛典</div>
+</header>
+
+<div class="grid-container" id="grid"></div>
+
+<div id="overlay">
+    <div class="content-box">
+        <div class="big-name" id="o-name"></div>
+        <div class="wish" id="o-wish"></div>
+        <button class="btn-close" onclick="closeOverlay()">返回班级</button>
+    </div>
+</div>
+
+<script>
+    // 同学名单及祝福语（保持不变）
+    const students = [
+        {name: "安峻熙", wish: "愿你在新的一年里，才华如峻岭之巅，光芒万丈，岁岁长安。"},
+        {name: "曾羚汶", wish: "愿你眼中总有星辰，心中常有繁花，在2026写下最灵动的篇章。"},
+        {name: "曾贤祖", wish: "愿你志在千里，步履不停，以赤子之心奔向属于你的星辰大海。"},
+        {name: "陈炳晖", wish: "愿你的未来如晨晖般绚灿，所有的梦想都能在中考之年如约而至。"},
+        {name: "陈洁雯", wish: "愿你保持那份纯粹与温柔，在平凡的日子里折射出最耀眼的光芒。"},
+        {name: "陈欣琪", wish: "愿你生活明朗，万物可爱，每一天都充满欣喜与琪丽。"},
+        {name: "陈星雨", wish: "愿你如星辰般璀璨，如春雨般润物，在青春的赛道上尽情闪耀。"},
+        {name: "高芷雅", wish: "愿你才情卓越，清雅脱俗，在最美的花季绽放出最独特的姿态。"},
+        {name: "苟昊博", wish: "愿你胸怀宽广如昊天，学识渊博如瀚海，前程似锦。"},
+        {name: "何嘉颖", wish: "愿你笑口常开，嘉言懿行，在2026年收获满满的幸福与进步。"},
+        {name: "胡锦康", wish: "愿你前程似锦，身体安康，用汗水浇灌出最丰硕的梦想之果。"},
+        {name: "蓝心玲", wish: "愿你心灵澄澈，聪慧伶俐，让每一刻青春都响彻快乐的铃声。"},
+        {name: "黎敬恒", wish: "愿你持之以恒，心怀敬畏，在攀登学业高峰的路上永不止步。"},
+        {name: "黎伟健", wish: "愿你身体强健，志向伟岸，以不凡之姿迎接未来的每一个挑战。"},
+        {name: "李嘉晖", wish: "愿你的人生充满阳光，嘉誉满载，让梦想在晖光中振翅高飞。"},
+        {name: "李嘉怡", wish: "愿你怡然自得，常伴欢欣，在新的旅程中遇见更好的自己。"},
+        {name: "李骏霖", wish: "愿你如骏马奔驰，得甘霖滋润，在2026年马到功成。"},
+        {name: "李乐恒", wish: "愿你快乐恒久，初心不改，在求知的道路上乐此不疲。"},
+        {name: "李颖诗", wish: "愿你聪颖过人，生活如诗，每一个日子都值得被珍藏。"},
+        {name: "李咏桐", wish: "愿你才华被世界咏唱，如梧桐般坚韧生长，直冲云霄。"},
+        {name: "李宇杰", wish: "愿你胸怀宇宙，杰出不凡，在广阔的天地间书写英雄梦想。"},
+        {name: "李紫泉", wish: "愿你的才思如泉涌，生活如紫气东来，高贵且充满活力。"},
+        {name: "梁颖文", wish: "愿你文采斐然，聪颖灵动，在笔墨间挥洒出最美的未来。"},
+        {name: "廖锐轩", wish: "愿你锐不可当，器宇轩昂，在少年时代留下最飒爽的背影。"},
+        {name: "廖庄文", wish: "愿你稳重端庄，文思泉涌，以踏实的每一步跨越山海。"},
+        {name: "林炯辉", wish: "愿你目光炯炯，前途辉煌，成为自己生命中最亮的星火。"},
+        {name: "刘梦豪", wish: "愿你梦想远大，豪气干云，不负韶华，勇敢追逐理想。"},
+        {name: "刘思涵", wish: "愿你沉思静悟，涵养深厚，在知识的海洋里扬帆远航。"},
+        {name: "陆轩", wish: "愿你志存高远，气宇轩昂，在九(9)班的集体中书写卓越。"},
+        {name: "聂灿威", wish: "愿你笑颜灿烂，威仪不凡，在每一个重要的时刻都闪闪发光。"},
+        {name: "宁诗敏", wish: "愿你内心宁静，敏而好学，将日子过成一首优美的诗。"},
+        {name: "欧荞珲", wish: "愿你如荞般坚韧，如珲般璀璨，在成长的道路上熠熠生辉。"},
+        {name: "彭志恒", wish: "愿你志向远大，持之以恒，中考之时定能旗开得胜。"},
+        {name: "全广浩", wish: "愿你眼界广阔，志向浩瀚，在更广阔的舞台展现全能才华。"},
+        {name: "覃俊城", wish: "愿你英俊睿智，成为自己心中那座坚不可摧的梦想之城。"},
+        {name: "覃旋", wish: "愿你人生旋律动听，在每一个转折点都能华丽起舞。"},
+        {name: "王楚杰", wish: "愿你楚楚不凡，杰出优秀，在新的一年里更上一层楼。"},
+        {name: "王梦娇", wish: "愿你梦想成真，娇艳如花，生活总是充满甜蜜与惊喜。"},
+        {name: "吴咏琳", wish: "愿你歌咏青春，美如琳琅，在每一刻都散发迷人魅力。"},
+        {name: "伍雨馨", wish: "愿你如春雨般润物，如馨香般远播，世界因你而温柔。"},
+        {name: "邢君昊", wish: "愿你谦谦君子，气吞昊天，在追逐梦想的路上永往直前。"},
+        {name: "许芷菡", wish: "愿你芳馨若芷，如菡萏初开，在最美的年纪活得清雅通透。"},
+        {name: "姚洁鸿", wish: "愿你纯洁无瑕，志向鸿鹄，在广阔的天空尽情翱翔。"},
+        {name: "张晗钰", wish: "愿你如晨曦般晗光，如钰石般珍贵，前路铺满阳光。"},
+        {name: "张茂硕", wish: "愿你学业茂盛，果实累累，在新的篇章里收获硕果。"},
+        {name: "赵曼利", wish: "愿你姿态曼妙，万事顺利，在平凡的生活里活出非凡。"},
+        {name: "钟芷潼", wish: "愿你如芷兰芬芳，如清潼灵动，拥有一个最灿烂的2026。"},
+        {name: "朱家年", wish: "愿你家睦人安，岁岁年年皆是好时节，万事皆如意。"},
+        {name: "邹子娴", wish: "愿你聪慧娴雅，兰质蕙心，在未来的日子里被温柔以待。"}
+    ];
+
+    const grid = document.getElementById('grid');
+    const fragment = document.createDocumentFragment();
+
+    students.forEach((s, i) => {
+        const card = document.createElement('div');
+        card.className = 'name-card';
+        card.innerText = s.name;
+        card.style.animationDelay = `${i * 0.03}s`; // 极致丝滑的交错淡入
+        card.onclick = () => openOverlay(s);
+        fragment.appendChild(card);
+    });
+    grid.appendChild(fragment);
+
+    const overlay = document.getElementById('overlay');
+    const oName = document.getElementById('o-name');
+    const oWish = document.getElementById('o-wish');
+
+    function openOverlay(s) {
+        oName.innerText = s.name;
+        oWish.innerText = s.wish;
+        overlay.classList.add('active');
+        createLuxeParticles();
+    }
+
+    function closeOverlay() {
+        overlay.classList.remove('active');
+    }
+
+    // 金红色碎片喷泉效果
+    function createLuxeParticles() {
+        const colors = ['#ffcc00', '#ffffff', '#ff3b30', '#ffd700'];
+        for (let i = 0; i < 40; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            const size = Math.random() * 8 + 2 + 'px';
+            p.style.width = size;
+            p.style.height = size;
+            p.style.background = colors[Math.floor(Math.random() * colors.length)];
+            
+            const tx = (Math.random() - 0.5) * 500 + 'px';
+            const ty = (Math.random() - 0.5) * 500 + 'px';
+            p.style.setProperty('--tx', tx);
+            p.style.setProperty('--ty', ty);
+            
+            p.style.left = '50%';
+            p.style.top = '50%';
+            
+            overlay.appendChild(p);
+            setTimeout(() => p.remove(), 1200);
+        }
+    }
+</script>
+</body>
+</html>
